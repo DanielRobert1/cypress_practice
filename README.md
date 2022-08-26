@@ -2,7 +2,7 @@
 
 Practice Task done by Aigbe Daniel, created in flutter using Flutter Bloc. supports both web and mobile, clone the appropriate branches mentioned below:
 
-* For Web and Mobile: https://github.com/DanielRobert1/cypress-practice/tree/master (stable channel)
+* For Web and Mobile: https://github.com/DanielRobert1/cypress_practice/tree/master (stable channel)
 
 ## How to Use 
 
@@ -11,7 +11,7 @@ Practice Task done by Aigbe Daniel, created in flutter using Flutter Bloc. suppo
 Download or clone this repo by using the link below:
 
 ```
-https://github.com/DanielRobert1/cypress-practice.git
+https://github.com/DanielRobert1/cypress_practice.git
 ```
 
 **Step 2:**
