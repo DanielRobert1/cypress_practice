@@ -17,16 +17,20 @@ class AlbumService {
 
     final cachedAlbums = await cacheManager.getFileFromCache("albums");
     if (cachedAlbums == null) {
-      returnData = await compute(_getApiAlbums, dioInstance);
+      returnData = await compute(_getApiAlbums, {'dioInstance': dioInstance, 'cacheManager': cacheManager});
       cacheManager.putFile("${AppConfig.baseUrl}/albums", convertStringToUint8List(jsonEncode(returnData)), key: "albums");
     } else {
       returnData = jsonDecode(await cachedAlbums.file.readAsString());
     }
 
+    print(returnData);
+
     return AlbumsResponse.fromJson(returnData);
   }
 
-  static Future<List<dynamic>> _getApiAlbums(Dio dioInstance) async {
+  static Future<List<dynamic>> _getApiAlbums(Map<String, dynamic> args) async {
+    Dio dioInstance = args['dioInstance'];
+    //CacheManager cacheManager = args['cacheManager'];
     List<dynamic> returnData = [];
     Response response = await dioInstance.get('/albums');
     final List<dynamic> responseData = response.data;
@@ -39,9 +43,22 @@ class AlbumService {
     }
 
     final res = await Future.wait(imageCalls);
+
     for (var i = 0; i < responseData.length; i++) {
-      var images = res[i].data.take(4).map((image) {
-        return image;
+      // List<Future<FileInfo>> imageDownloadCalls = [];
+      // for (var image in res[i].data) {
+      //   imageDownloadCalls.add(cacheManager.downloadFile(image['url']));
+      // }
+
+      // List<FileInfo> imageRes = await Future.wait(imageDownloadCalls);
+
+      //int index = 0;
+      var images = res[i].data.map((image) {
+        var returnImage = Map<String, dynamic>.from(image);
+        //returnImage['localPath'] = imageRes[index].file.path;
+        returnImage['localPath'] = '';
+        //index += 1;
+        return returnImage;
       }).toList();
 
       var ele = {...responseData[i], "images": images};

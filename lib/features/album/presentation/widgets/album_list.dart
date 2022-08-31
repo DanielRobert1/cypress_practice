@@ -6,8 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AlbumList extends StatelessWidget {
   final List<Album> list;
-  final int limit;
-  const AlbumList({Key? key, required this.list, this.limit = 4}) : super(key: key);
+  const AlbumList({Key? key, required this.list}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,33 +16,37 @@ class AlbumList extends StatelessWidget {
             child: Text("No Records"),
           )
         : ListView.builder(
+            cacheExtent: 100,
             itemBuilder: (context, index) {
-              var item = list[index % limit];
+              var item = list[index % list.length];
               return Container(
                 padding: const EdgeInsets.all(20),
                 margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                decoration: BoxDecoration(
-                  boxShadow: const [BoxShadow(color: Color.fromRGBO(0, 0, 0, .1), blurRadius: 1, offset: Offset(0, 0))],
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.white,
-                ),
+                color: Colors.white,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text("${item.id} ${item.title}"),
+                    ),
                     SizedBox(
                       width: screenSize.width,
-                      height: 200,
+                      height: 100,
                       child: ListView.builder(
+                        cacheExtent: 100,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, subIndex) {
-                          var itemImage = item.artList[subIndex % limit];
-                          return SizedBox(
+                          var itemImage = item.artList[subIndex % item.artList.length];
+                          return Container(
                             width: screenSize.width / 3 - 30,
-                            height: 200,
+                            height: 100,
+                            padding: const EdgeInsets.only(left: 10),
                             child: CachedNetworkImage(
                               cacheManager: context.read<AppCacheManager>(),
+                              cacheKey: itemImage.url,
                               imageUrl: itemImage.url,
                               imageBuilder: (context, imageProvider) => Container(
                                 decoration: BoxDecoration(
@@ -59,10 +62,6 @@ class AlbumList extends StatelessWidget {
                           );
                         },
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text("Album ${item.id}"),
                     ),
                   ],
                 ),
